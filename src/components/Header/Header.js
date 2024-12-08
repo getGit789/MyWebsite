@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  IconButton, 
+  Drawer, 
+  List, 
+  ListItem, 
+  ListItemText, 
+  useMediaQuery, 
+  useTheme 
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
-const StyledAppBar = styled(AppBar, {
-  shouldForwardProp: (prop) => prop !== 'shrink'
-})(({ theme, shrink }) => ({
+const StyledAppBar = styled(AppBar)(({ theme, shrink }) => ({
   background: theme.palette.mode === 'light' 
     ? 'rgba(255, 255, 255, 0.8)'
     : 'rgba(18, 18, 18, 0.8)',
@@ -23,21 +34,37 @@ const StyledAppBar = styled(AppBar, {
   borderRadius: '100px',
   padding: '8px',
   transition: 'all 0.3s ease-in-out',
+  [theme.breakpoints.down('md')]: {
+    top: '15px',
+    width: '95%',
+    padding: '4px',
+    scale: shrink ? 0.9 : 1,
+  },
+  [theme.breakpoints.down('sm')]: {
+    top: '25px',
+    width: '98%',
+    padding: '2px',
+    scale: 1,
+  }
 }));
 
-const StyledToolbar = styled(Toolbar, {
-  shouldForwardProp: (prop) => prop !== 'shrink'
-})(({ shrink }) => ({
+const StyledToolbar = styled(Toolbar)(({ theme, shrink }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   minHeight: shrink ? '40px !important' : '48px !important',
   padding: '0 24px !important',
   transition: 'all 0.3s ease-in-out',
+  [theme.breakpoints.down('md')]: {
+    minHeight: shrink ? '36px !important' : '44px !important',
+    padding: '0 12px !important',
+  },
+  [theme.breakpoints.down('sm')]: {
+    minHeight: '40px !important',
+    padding: '0 8px !important',
+  }
 }));
 
-const Logo = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'shrink'
-})(({ theme, shrink }) => ({
+const Logo = styled(Typography)(({ theme, shrink }) => ({
   background: 'linear-gradient(90deg, #9C27B0 0%, #E040FB 100%)',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
@@ -46,6 +73,9 @@ const Logo = styled(Typography, {
   fontSize: shrink ? '20px' : '24px',
   cursor: 'pointer',
   transition: 'all 0.3s ease-in-out',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '18px',
+  }
 }));
 
 const NavLinks = styled('div')({
@@ -54,24 +84,23 @@ const NavLinks = styled('div')({
   alignItems: 'center',
 });
 
-const NavLink = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== 'shrink'
-})(({ theme, shrink }) => ({
+const NavLink = styled(Typography)(({ theme, shrink }) => ({
   cursor: 'pointer',
   fontSize: shrink ? '14px' : '16px',
-  color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.text.primary,
+  color: theme.palette.text.primary,
   transition: 'all 0.3s ease-in-out',
   '&:hover': {
     color: theme.palette.primary.main,
   },
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '14px',
+  }
 }));
 
-const ThemeToggle = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== 'shrink'
-})(({ theme, shrink }) => ({
+const ThemeToggle = styled(IconButton)(({ theme, shrink }) => ({
   padding: shrink ? '6px' : '8px',
   marginLeft: '8px',
-  color: theme.palette.mode === 'light' ? theme.palette.text.primary : theme.palette.text.primary,
+  color: theme.palette.text.primary,
   transition: 'all 0.3s ease-in-out',
   '& .MuiSvgIcon-root': {
     fontSize: shrink ? '20px' : '24px',
@@ -81,10 +110,28 @@ const ThemeToggle = styled(IconButton, {
       ? 'rgba(0, 0, 0, 0.04)'
       : 'rgba(255, 255, 255, 0.08)',
   },
+  [theme.breakpoints.down('sm')]: {
+    padding: '4px',
+    '& .MuiSvgIcon-root': {
+      fontSize: '20px',
+    },
+  }
+}));
+
+const MobileMenuIcon = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.mode === 'light' 
+    ? theme.palette.text.secondary 
+    : theme.palette.text.primary,
+  [theme.breakpoints.down('sm')]: {
+    padding: '4px',
+  }
 }));
 
 function Header({ toggleColorMode, mode }) {
   const [shrink, setShrink] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -106,23 +153,99 @@ function Header({ toggleColorMode, mode }) {
         top: offsetPosition,
         behavior: 'smooth'
       });
+      
+      // Close mobile menu after navigation
+      setMobileOpen(false);
     }
   };
 
-  return (
-    <StyledAppBar elevation={0} shrink={shrink}>
-      <StyledToolbar shrink={shrink}>
-        <Logo shrink={shrink} onClick={() => scrollToSection('home')}>DK</Logo>
-        <NavLinks>
-          <NavLink shrink={shrink} onClick={() => scrollToSection('projects')}>Projects</NavLink>
-          <NavLink shrink={shrink} onClick={() => scrollToSection('skills')}>Skills</NavLink>
-          <NavLink shrink={shrink} onClick={() => scrollToSection('contact')}>Contact</NavLink>
-          <ThemeToggle onClick={toggleColorMode} shrink={shrink}>
+  const toggleMobileMenu = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const renderNavLinks = (isMobileMenu = false) => (
+    isMobileMenu ? (
+      <List>
+        {['home', 'projects', 'skills', 'contact'].map((section) => (
+          <ListItem 
+            key={section} 
+            onClick={() => scrollToSection(section)}
+            sx={{ 
+              textTransform: 'capitalize',
+              '&:hover': { 
+                backgroundColor: theme.palette.mode === 'light' 
+                  ? 'rgba(0,0,0,0.04)' 
+                  : 'rgba(255,255,255,0.08)' 
+              }
+            }}
+          >
+            <ListItemText primary={section} />
+          </ListItem>
+        ))}
+        <ListItem>
+          <IconButton 
+            onClick={toggleColorMode} 
+            sx={{ 
+              color: theme.palette.text.primary,
+              width: '100%',
+              justifyContent: 'center' 
+            }}
+          >
             {mode === 'light' ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
-          </ThemeToggle>
-        </NavLinks>
-      </StyledToolbar>
-    </StyledAppBar>
+          </IconButton>
+        </ListItem>
+      </List>
+    ) : (
+      <>
+        <NavLink shrink={shrink} onClick={() => scrollToSection('projects')}>Projects</NavLink>
+        <NavLink shrink={shrink} onClick={() => scrollToSection('skills')}>Skills</NavLink>
+        <NavLink shrink={shrink} onClick={() => scrollToSection('contact')}>Contact</NavLink>
+        <ThemeToggle onClick={toggleColorMode} shrink={shrink}>
+          {mode === 'light' ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
+        </ThemeToggle>
+      </>
+    )
+  );
+
+  return (
+    <>
+      <StyledAppBar elevation={0} shrink={shrink}>
+        <StyledToolbar shrink={shrink}>
+          <Logo shrink={shrink} onClick={() => scrollToSection('home')}>DK</Logo>
+          
+          {isMobile ? (
+            <MobileMenuIcon 
+              aria-label="open drawer"
+              edge="start"
+              onClick={toggleMobileMenu}
+              sx={{ mr: 2 }}
+            >
+              {mobileOpen ? <CloseIcon /> : <MenuIcon />}
+            </MobileMenuIcon>
+          ) : (
+            <NavLinks>
+              {renderNavLinks()}
+            </NavLinks>
+          )}
+        </StyledToolbar>
+      </StyledAppBar>
+
+      {isMobile && (
+        <Drawer
+          anchor="right"
+          open={mobileOpen}
+          onClose={toggleMobileMenu}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: '70%',
+              backgroundColor: theme.palette.background.default,
+            },
+          }}
+        >
+          {renderNavLinks(true)}
+        </Drawer>
+      )}
+    </>
   );
 }
 

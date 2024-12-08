@@ -47,6 +47,24 @@ function App() {
     },
     typography: {
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+      h1: {
+        fontSize: 'clamp(2rem, 6vw, 3.75rem)',
+      },
+      h2: {
+        fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+      },
+      body1: {
+        fontSize: 'clamp(1rem, 3vw, 1.25rem)',
+      }
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 960,
+        lg: 1280,
+        xl: 1920,
+      },
     },
   });
 

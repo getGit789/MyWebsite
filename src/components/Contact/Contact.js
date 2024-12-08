@@ -100,14 +100,29 @@ function Contact() {
   const handleEmailClick = () => {
     const email = 'info@damirkranjcevic.com';
     const subject = 'Portfolio Contact';
-    const mailtoLink = `mailto: ${email}?subject=${encodeURIComponent(subject)}`;
     
-    // Create and click a temporary link
-    const link = document.createElement('a');
-    link.href = mailtoLink;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Multiple methods to ensure email link works across different browsers and platforms
+    try {
+      // Method 1: Direct window location
+      window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+    } catch (error) {
+      try {
+        // Method 2: Create and click a temporary link
+        const link = document.createElement('a');
+        link.href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (secondaryError) {
+        // Fallback method: Copy to clipboard and show instructions
+        navigator.clipboard.writeText(email).then(() => {
+          alert(`Email address ${email} has been copied to clipboard. Please paste it into your email client.`);
+        }).catch(() => {
+          prompt('Unable to automatically open email. Please copy this email address:', email);
+        });
+      }
+    }
   };
 
   const handleWhatsAppClick = () => {
