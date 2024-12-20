@@ -154,7 +154,6 @@ function Header({ toggleColorMode, mode }) {
         behavior: 'smooth'
       });
       
-      // Close mobile menu after navigation
       setMobileOpen(false);
     }
   };
@@ -197,10 +196,10 @@ function Header({ toggleColorMode, mode }) {
       </List>
     ) : (
       <>
-        <NavLink shrink={shrink} onClick={() => scrollToSection('projects')}>Projects</NavLink>
-        <NavLink shrink={shrink} onClick={() => scrollToSection('skills')}>Skills</NavLink>
-        <NavLink shrink={shrink} onClick={() => scrollToSection('contact')}>Contact</NavLink>
-        <ThemeToggle onClick={toggleColorMode} shrink={shrink}>
+        <NavLink shrink={shrink ? 1 : 0} onClick={() => scrollToSection('projects')}>Projects</NavLink>
+        <NavLink shrink={shrink ? 1 : 0} onClick={() => scrollToSection('skills')}>Skills</NavLink>
+        <NavLink shrink={shrink ? 1 : 0} onClick={() => scrollToSection('contact')}>Contact</NavLink>
+        <ThemeToggle onClick={toggleColorMode} shrink={shrink ? 1 : 0}>
           {mode === 'light' ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
         </ThemeToggle>
       </>
@@ -209,9 +208,9 @@ function Header({ toggleColorMode, mode }) {
 
   return (
     <>
-      <StyledAppBar elevation={0} shrink={shrink}>
-        <StyledToolbar shrink={shrink}>
-          <Logo shrink={shrink} onClick={() => scrollToSection('home')}>DK</Logo>
+      <StyledAppBar elevation={0} shrink={shrink ? 1 : 0}>
+        <StyledToolbar shrink={shrink ? 1 : 0}>
+          <Logo shrink={shrink ? 1 : 0} onClick={() => scrollToSection('home')}>DK</Logo>
           
           {isMobile ? (
             <MobileMenuIcon 

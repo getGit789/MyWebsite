@@ -38,18 +38,30 @@ function Footer() {
   return (
     <FooterContainer>
       <SocialLinks>
-        <StyledIconButton href="https://github.com/yourusername" target="_blank">
+        <StyledIconButton 
+          href="https://github.com/getGit789" 
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <GitHubIcon />
         </StyledIconButton>
-        <StyledIconButton href="https://linkedin.com/in/yourusername" target="_blank">
+        <StyledIconButton 
+          href="https://www.linkedin.com/in/damir-kranjcevic-613825200" 
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <LinkedInIcon />
         </StyledIconButton>
-        <StyledIconButton href="https://twitter.com/yourusername" target="_blank">
+        <StyledIconButton 
+          href="https://x.com/DKranjcevi1973" 
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <TwitterIcon />
         </StyledIconButton>
       </SocialLinks>
       <Copyright>
-        © 2024 Damir Kranjevic. All rights reserved.
+        &copy; 2024 Damir Kranjcevic. All rights reserved.
       </Copyright>
     </FooterContainer>
   );

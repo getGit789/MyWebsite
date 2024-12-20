@@ -103,7 +103,7 @@ const projects = [
     title: 'Real-time Chat Application',
     description: 'A modern chat application with real-time messaging, user authentication, and message history.',
     tech: ['Node.js', 'Socket.io', 'React', 'MongoDB'],
-    demo: 'https://chat-app-demo.com',
+    demo: 'https://realtimechatapp-57e81.web.app/',
     code: 'https://github.com/yourusername/chat-app',
     image: process.env.PUBLIC_URL + '/realtimechat.webp'
   },
@@ -119,7 +119,7 @@ const projects = [
     title: 'Weather Application',
     description: 'Weather forecast app with location search and detailed weather information.',
     tech: ['JavaScript', 'OpenWeather API', 'React'],
-    demo: 'https://weather-app-demo.com',
+    demo: 'https://getgit789.github.io/weather/',
     code: 'https://github.com/yourusername/weather-app',
     image: process.env.PUBLIC_URL + '/wheatherapp.png'
   },
@@ -175,8 +175,10 @@ function Projects() {
                     variant="contained"
                     color="primary"
                     endIcon={<LaunchIcon />}
+                    component="a"
                     href={project.demo}
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Demo
                   </Button>

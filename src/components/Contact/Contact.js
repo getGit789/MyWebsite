@@ -42,22 +42,36 @@ const ContactInfo = styled(Box)(({ theme }) => ({
   gap: '32px',
   justifyContent: 'center',
   marginBottom: '40px',
+  flexDirection: 'row',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '16px'
+  }
 }));
 
-const InfoItem = styled(Box)(({ theme, clickable }) => ({
+const InfoItem = styled(Box)(({ theme, $clickable }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: '8px',
   color: theme.palette.text.secondary,
-  cursor: clickable ? 'pointer' : 'default',
+  cursor: $clickable ? 'pointer' : 'default',
   transition: 'color 0.2s ease-in-out',
-  '&:hover': clickable ? {
+  '&:hover': $clickable ? {
     color: theme.palette.primary.main,
   } : {},
   '& .MuiSvgIcon-root': {
     color: theme.palette.primary.main,
+    fontSize: '24px',
     '&.whatsapp-icon': {
-      color: '#25D366', // WhatsApp brand color
+      color: '#25D366',
+    }
+  },
+  '& .MuiTypography-root': {
+    fontSize: '16px',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '14px',
+      wordBreak: 'break-word'
     }
   },
   '& a': {
@@ -133,11 +147,11 @@ function Contact() {
     <ContactContainer>
       <SectionTitle>Get in Touch</SectionTitle>
       <ContactInfo>
-        <InfoItem onClick={handleEmailClick} clickable>
+        <InfoItem onClick={handleEmailClick} $clickable>
           <EmailIcon />
           <Typography>info@damirkranjcevic.com</Typography>
         </InfoItem>
-        <InfoItem onClick={handleWhatsAppClick} clickable>
+        <InfoItem onClick={handleWhatsAppClick} $clickable>
           <WhatsAppIcon className="whatsapp-icon" />
           <Typography>+420603183777</Typography>
         </InfoItem>
